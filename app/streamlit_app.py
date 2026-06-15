@@ -10,7 +10,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import streamlit as st
@@ -61,11 +62,12 @@ def main():
     st.title("🔍 SpectraDet — detecting objects in multi-degraded images")
     st.caption("FFT-enhanced, ~2.5M-param anchor-free detector with SimOTA + IoU-guided loss.")
 
-    ckpts = [str(p) for p in Path("runs").glob("**/best.pt")] if Path("runs").exists() else []
+    runs_dir = PROJECT_ROOT / "runs"
+    ckpts = sorted(str(p) for p in runs_dir.glob("**/best.pt")) if runs_dir.exists() else []
     with st.sidebar:
         st.header("Model")
         ckpt = st.selectbox("checkpoint", ckpts) if ckpts else st.text_input(
-            "checkpoint path", "runs/lite/best.pt")
+            "checkpoint path", str(PROJECT_ROOT / "runs/lite/best.pt"))
         conf = st.slider("confidence threshold", 0.05, 0.9, 0.3, 0.05)
         nms = st.slider("NMS IoU", 0.1, 0.9, 0.6, 0.05)
         st.header("Degradations")
@@ -110,14 +112,14 @@ def main():
     with c1:
         st.subheader("clean")
         st.image(draw_boxes(arr, gt["boxes"], gt["labels"], classes) if gt else Image.fromarray(arr),
-                 use_container_width=True)
+                 width="stretch")
     with c2:
         st.subheader("degraded (model input)")
-        st.image(Image.fromarray(degraded), use_container_width=True)
+        st.image(Image.fromarray(degraded), width="stretch")
     with c3:
         st.subheader(f"detections ({len(pred['labels'])})")
         st.image(draw_boxes(degraded, pred["boxes"], pred["labels"], classes, pred["scores"]),
-                 use_container_width=True)
+                 width="stretch")
 
     if len(pred["labels"]):
         st.write({classes[int(l)]: round(float(s), 3) for l, s in zip(pred["labels"], pred["scores"])})

@@ -1,8 +1,8 @@
 # SpectraDet — LinkedIn post
 
 > Before posting:
-> 1. Push the repo, then drop the GitHub link in the FIRST COMMENT (LinkedIn throttles
->    reach on posts with external links in the body).
+> 1. Repo is live → drop this in the FIRST COMMENT (LinkedIn throttles reach on posts with
+>    external links in the body):  https://github.com/parasjangir/spectradet
 > 2. Attach 2–3 images: `assets/sample_grid.png` (the degraded data), `assets/comparison.png`
 >    (lite vs baseline), and `assets/demo_predictions.png` (detections through the blur).
 > 3. The lite-vs-baseline mAP-gap line is left blank on purpose — fill it once the baseline
