@@ -1,0 +1,44 @@
+# SpectraDet-Baseline — the heavier "DrebNET-style" reference (~10M params, no FFT)
+# Full (non-depthwise) convs, wider, deeper, and WITHOUT the spectral gate, so we
+# can measure the param/latency/mAP trade-off the lite model buys us.
+name: spectradet_baseline
+
+model:
+  width: 36          # -> ~10.7M params total
+  depth: 2
+  neck_ch: 128
+  depthwise: false   # full (dense) convolutions
+  fft_levels: []     # no FFT module in the baseline
+  n_head_convs: 2
+  hires_blocks: 8    # DrebNET-style high-resolution dense encoder (the latency driver)
+  hires_ch: 96
+
+data:
+  name: synthetic
+  img_size: 256
+  train_size: 2000
+  val_size: 400
+  max_objects: 6
+  min_degradations: 1
+  max_degradations: 3
+  degrade_prob: 0.9
+  degrade: true
+
+loss:
+  cls_weight: 1.0
+  obj_weight: 1.0
+  reg_weight: 5.0
+  iou_guided: true
+
+train:
+  epochs: 20
+  batch_size: 16
+  lr: 0.001
+  weight_decay: 0.0005
+  warmup_epochs: 1
+  num_workers: 0
+  device: auto
+  amp: false
+  conf_thr: 0.05
+  nms_thr: 0.6
+  out_dir: runs/baseline

@@ -1,0 +1,12 @@
+# SpectraDet — from-scratch, minimal-dependency object-degradation detector
+# (deliberately NO torchvision / opencv — NMS, IoU, blur kernels, mAP are all hand-rolled)
+torch>=2.2
+numpy>=1.24
+scipy>=1.10        # convolution / kernels for degradations
+pillow>=9.0        # image IO + JPEG-artifact simulation
+matplotlib>=3.6    # visualisation / sample grids
+tqdm>=4.64         # progress bars
+pyyaml>=6.0        # configs
+pandas>=2.0        # benchmark / results tables
+streamlit>=1.30    # optional interactive demo (app/streamlit_app.py)
+pytest>=7.0        # tests

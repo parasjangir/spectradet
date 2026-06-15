@@ -1,0 +1,40 @@
+# SpectraDet-Lite — our efficient model (~2.5M params, FFT-enhanced)
+name: spectradet_lite
+
+model:
+  width: 40          # backbone base width  (-> ~2.5M params total)
+  depth: 1           # bottlenecks per stage multiplier
+  neck_ch: 96        # uniform FPN channel width
+  depthwise: true    # depthwise-separable convs (the param/latency win)
+  fft_levels: [1, 2] # apply the spectral gate on P4 and P5
+  n_head_convs: 2
+
+data:
+  name: synthetic
+  img_size: 256
+  train_size: 2000
+  val_size: 400
+  max_objects: 6
+  min_degradations: 1
+  max_degradations: 3
+  degrade_prob: 0.9
+  degrade: true
+
+loss:
+  cls_weight: 1.0
+  obj_weight: 1.0
+  reg_weight: 5.0
+  iou_guided: true   # objectness target = predicted-box IoU with its GT
+
+train:
+  epochs: 20
+  batch_size: 16
+  lr: 0.001
+  weight_decay: 0.0005
+  warmup_epochs: 1
+  num_workers: 0
+  device: auto
+  amp: false
+  conf_thr: 0.05
+  nms_thr: 0.6
+  out_dir: runs/lite
