@@ -109,15 +109,23 @@ python scripts/benchmark.py --devices cpu mps
 # 5. reproduce the full headline comparison (trains both, makes plots)
 python scripts/run_experiments.py --epochs 16
 
-# 6. qualitative predictions
+# 6. qualitative predictions on the val set
 python scripts/demo.py --ckpt runs/lite/best.pt --conf 0.3
 
-# 7. interactive demo
+# 7. run on YOUR OWN image(s) -> annotated copies in runs/predict/
+python scripts/predict.py --ckpt runs/lite/best.pt --source examples/ --conf 0.35
+
+# 8. interactive demo (also supports image upload)
 streamlit run app/streamlit_app.py
 
 # tests
 pytest -q
 ```
+
+> ⚠️ **A model only knows the classes it was trained on.** The default checkpoint is
+> trained on 6 synthetic shapes (rectangle/circle/triangle/ellipse/star/pentagon), so
+> `predict.py` / the upload demo will detect *those*, not real-world objects. To detect
+> real objects, train on a real dataset via the VOC loader (`data.name: voc`).
 
 ---
 
@@ -131,7 +139,8 @@ spectradet/
   engine/      train.py · eval.py (from-scratch mAP) · infer.py (NMS) · benchmark.py
   utils/       boxes.py (IoU/CIoU/NMS) · flops.py · seed.py
 configs/       lite.yaml · baseline.yaml
-scripts/       train · evaluate · benchmark · run_experiments · demo · make_sample_grid
+scripts/       train · evaluate · benchmark · run_experiments · predict · demo · plot_curves · make_sample_grid
+examples/      sample input images to try `scripts/predict.py` on
 app/           streamlit_app.py
 tests/         boxes · degradations · model/simota/loss
 ```
